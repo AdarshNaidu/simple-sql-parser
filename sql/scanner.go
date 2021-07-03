@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"bytes"
+	"strings"
 )
 
 const eof = rune(0)
@@ -47,7 +48,40 @@ func (s *Scanner) scanWhitespace() (Token, string) {
 	return WS, buf.String()
 }
 
+func (s *Scanner) scanIdent() (tok Token, lit string) {
+
+	var buf bytes.Buffer
+
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if !isLetter(ch) && !isDigit(ch) && ch != '_' {
+			s.unread()
+			break
+		} else {
+			buf.WriteRune(ch)
+		}
+	}
+
+	// check if the string is a reserverd word
+	switch strings.ToUpper(buf.String()) {
+	case "SELECT":
+		return SELECT, buf.String()
+	case "FROM":
+		return FROM, buf.String()
+	}
+
+	return IDENT, buf.String()
+}
+
 func isWhitespace (ch rune) bool {
 	return ch == ' ' || ch == '\t' || ch == '\n'
 }
 
+func isLetter (ch rune) bool {
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+}
+
+func isDigit (ch rune) bool {
+	return ch >= '0' && ch <= '9'
+}
