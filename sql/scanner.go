@@ -3,6 +3,7 @@ package sql
 import (
 	"bufio"
 	"io"
+	"bytes"
 )
 
 const eof = rune(0)
@@ -28,4 +29,25 @@ func (s *Scanner) read() rune {
 
 func (s *Scanner) unread() { _ = s.r.UnreadRune() }
 
+func (s *Scanner) scanWhitespace() (Token, string) {
+
+	var buf bytes.Buffer
+
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if !isWhitespace(ch) {
+			s.unread()
+			break
+		} else {
+			buf.WriteRune(ch)
+		}
+	}
+
+	return WS, buf.String()
+}
+
+func isWhitespace (ch rune) bool {
+	return ch == ' ' || ch == '\t' || ch == '\n'
+}
 
