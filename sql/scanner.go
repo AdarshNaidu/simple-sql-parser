@@ -30,6 +30,30 @@ func (s *Scanner) read() rune {
 
 func (s *Scanner) unread() { _ = s.r.UnreadRune() }
 
+// scan the next token from the scanner
+func (s *Scanner) Scan() (tok Token, lit string) {
+	ch := s.read()
+
+	if isWhitespace(ch) {
+		s.unread()
+		return s.scanWhitespace()
+	} else if isLetter(ch) {
+		s.unread()
+		return s.scanIdent()
+	}
+
+	switch ch {
+	case eof:
+		return EOF, ""
+	case '*':
+		return ASTERISK, string(ch)
+	case ',':
+		return COMMA, string(ch)
+	}
+
+	return ILLEGAL, string(ch)
+}
+
 func (s *Scanner) scanWhitespace() (Token, string) {
 
 	var buf bytes.Buffer
