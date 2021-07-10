@@ -87,7 +87,7 @@ func (s *Scanner) scanIdent() (tok Token, lit string) {
 		}
 	}
 
-	// check if the string is a reserverd word
+	// check if the string is a reserved word
 	switch strings.ToUpper(buf.String()) {
 	case "SELECT":
 		return SELECT, buf.String()
