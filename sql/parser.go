@@ -10,6 +10,16 @@ type SelectStatement struct {
 	TableName string
 }
 
+func (s SelectStatement) String() string {
+	var fields string
+
+	for _, field := range s.Fields {
+		fields += field + " "
+	}
+
+	return fmt.Sprintf("Fields: %s\nTable Name: %s\n", fields, s.TableName)
+}
+
 type Parser struct {
 	s *Scanner
 	buf struct {
