@@ -6,4 +6,13 @@
 
 </div>
 
+## Project Setup
 
+1. Clone the repository
+2. To start program: `go run main.go`
+3. To run tests: `go test ./sql -v`
+4. To build project: `go build`
+
+<hr>
+
+Tutorial followed to build sql package: [https://blog.gopheracademy.com/advent-2014/parsers-lexers](https://blog.gopheracademy.com/advent-2014/parsers-lexers)
