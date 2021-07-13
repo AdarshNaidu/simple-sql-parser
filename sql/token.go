@@ -15,8 +15,13 @@ const (
 	// Misc characters
 	ASTERISK
 	COMMA
+	OPENING_BRACKET
+	CLOSING_BRACKET
 
 	// Keywords
 	SELECT
 	FROM
+	INSERT
+	INTO 
+	VALUES
 )
