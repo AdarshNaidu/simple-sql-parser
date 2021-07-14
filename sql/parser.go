@@ -26,6 +26,22 @@ type InsertStatement struct {
 	TableName string
 }
 
+func (s InsertStatement) String() string {
+	var fields string
+
+	for _, field := range s.Fields {
+		fields += field + " "
+	}
+
+	var values string
+
+	for _, value := range s.Values {
+		values += value + " "
+	}
+
+	return fmt.Sprintf("Fields: %s\nValues: %s\nTable Name: %s\n", fields, values, s.TableName)
+}
+
 type Parser struct {
 	s *Scanner
 	buf struct {
@@ -39,7 +55,20 @@ func NewParser(r io.Reader) *Parser {
 	return &Parser{s: NewScanner(r)}
 }
 
-func (p *Parser) Parse() (*SelectStatement, error) {
+func (p *Parser) Parse() (interface{}, error) {	
+
+	switch tok, _ := p.scanIgnoreWhitespace(); tok {
+	case SELECT:
+		p.unscan()
+		return p.parseSelect()
+	case INSERT:
+		p.unscan()
+		return p.parseInsert()
+	}
+	return nil, fmt.Errorf("Sorry, only SELECT and INSERT is supported.")
+}
+
+func (p *Parser) parseSelect() (*SelectStatement, error) {
 	stmt := &SelectStatement{}
 
 	// first token should be select
@@ -86,7 +115,7 @@ func (p *Parser) parseInsert() (*InsertStatement, error) {
 		return nil, fmt.Errorf("found %q, expected INSERT", lit)
 	}
 
-	// second token should be insert
+	// second token should be into
 	if tok, lit := p.scanIgnoreWhitespace(); tok != INTO {
 		return nil, fmt.Errorf("found %q, expected INTO", lit)
 	}
