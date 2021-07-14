@@ -49,6 +49,10 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		return ASTERISK, string(ch)
 	case ',':
 		return COMMA, string(ch)
+	case '(':
+		return OPENING_BRACKET, string(ch)
+	case ')':
+		return CLOSING_BRACKET, string(ch)
 	}
 
 	return ILLEGAL, string(ch)
@@ -93,6 +97,12 @@ func (s *Scanner) scanIdent() (tok Token, lit string) {
 		return SELECT, buf.String()
 	case "FROM":
 		return FROM, buf.String()
+	case "INSERT":
+		return INSERT, buf.String()
+	case "INTO":
+		return INTO, buf.String()
+	case "VALUES":
+		return VALUES, buf.String()
 	}
 
 	return IDENT, buf.String()
