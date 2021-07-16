@@ -46,32 +46,37 @@ func (p *Parser) parseInsert() (*InsertStatement, error) {
 	}
 	stmt.TableName = lit
 
-	if tok, lit := p.scanIgnoreWhitespace(); tok != OPENING_BRACKET {
-		return nil, fmt.Errorf("found %q, expect (", lit)
-	}
+	tok, lit = p.scanIgnoreWhitespace()
 
-	for {
-		tok, lit := p.scanIgnoreWhitespace()
-
-		if(tok == CLOSING_BRACKET) { 
-			p.unscan()
-			break 
+	if tok == OPENING_BRACKET {
+		for {
+			tok, lit := p.scanIgnoreWhitespace()
+	
+			if(tok == CLOSING_BRACKET) { 
+				p.unscan()
+				break 
+			}
+	
+			if(tok != IDENT) {
+				return nil, fmt.Errorf("found %q, expected field name or )", lit)
+			}
+	
+			stmt.Fields = append(stmt.Fields, lit)
+	
+			if tok, _ := p.scanIgnoreWhitespace(); tok != COMMA {
+				p.unscan()
+				break
+			}
+		}
+	
+		if tok, lit := p.scanIgnoreWhitespace(); tok != CLOSING_BRACKET {
+			return nil, fmt.Errorf("found %q, expected )", lit)
 		}
 
-		if(tok != IDENT) {
-			return nil, fmt.Errorf("found %q, expected field name or )", lit)
-		}
-
-		stmt.Fields = append(stmt.Fields, lit)
-
-		if tok, _ := p.scanIgnoreWhitespace(); tok != COMMA {
-			p.unscan()
-			break
-		}
-	}
-
-	if tok, lit := p.scanIgnoreWhitespace(); tok != CLOSING_BRACKET {
-		return nil, fmt.Errorf("found %q, expected )", lit)
+	} else if tok == VALUES {
+		p.unscan()
+	} else {
+		return nil, fmt.Errorf("found %q, expect ( or VALUES", lit)
 	}
 
 	if tok, lit := p.scanIgnoreWhitespace(); tok != VALUES {
