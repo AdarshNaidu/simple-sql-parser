@@ -76,7 +76,7 @@ func (p *Parser) parseInsert() (*InsertStatement, error) {
 	} else if tok == VALUES {
 		p.unscan()
 	} else {
-		return nil, fmt.Errorf("found %q, expect ( or VALUES", lit)
+		return nil, fmt.Errorf("found %q, expected ( or VALUES", lit)
 	}
 
 	if tok, lit := p.scanIgnoreWhitespace(); tok != VALUES {
