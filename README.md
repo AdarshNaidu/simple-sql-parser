@@ -13,6 +13,11 @@
 3. To run tests: `go test ./sql -v`
 4. To build project: `go build`
 
+## Usage
+
+1. Download a suitable executable from releases.
+2. Run the executable. (Sample inputs in `./sql/*test.go` files)
+
 <hr>
 
 Tutorial followed to build sql package: [https://blog.gopheracademy.com/advent-2014/parsers-lexers](https://blog.gopheracademy.com/advent-2014/parsers-lexers)
